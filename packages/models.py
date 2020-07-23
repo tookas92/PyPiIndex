@@ -33,3 +33,6 @@ class Package(models.Model):
     yanked = models.BooleanField()
     yanked_reason = models.CharField(max_length=256, null=True, blank=True)
     releases = models.CharField(max_length=2048)
+
+    def __str__(self):
+        return self.name

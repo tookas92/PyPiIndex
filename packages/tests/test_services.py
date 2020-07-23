@@ -3,7 +3,8 @@ from collections import OrderedDict
 from django.test import TestCase
 from unittest.mock import Mock, patch
 
-from packages.services import PyPiPackagesAdapter
+from packages.services import PyPiPackagesAdapter, PyPiPackagesProcessor
+from packages.models import Package
 
 
 class TestPyPiPackagesAdapter(TestCase):
@@ -73,3 +74,51 @@ class TestPyPiPackagesAdapter(TestCase):
         package_jsons = adapter.get_packages_json_list(package_names)
 
         self.assertEqual(package_jsons, expected_output)
+
+
+class TestPyPiPackagesProcessor(TestCase):
+    def test_index_packages(self):
+        adapter_mock = Mock()
+        adapter_mock.get_packages_json_list.return_value = [
+            {
+                "info": {
+                    "author": "Kenzo-Hugo Hillion",
+                    "author_email": "kehillio@pasteur.fr",
+                    "bugtrack_url": None,
+                    "classifiers": [],
+                    "description": "",
+                    "description_content_type": "",
+                    "docs_url": None,
+                    "download_url": "",
+                    "downloads": {"last_day": -1, "last_month": -1, "last_week": -1},
+                    "home_page": "",
+                    "keywords": "",
+                    "license": "",
+                    "maintainer": "",
+                    "maintainer_email": "",
+                    "name": "dabeplech",
+                    "package_url": "https://pypi.org/project/dabeplech/",
+                    "platform": "",
+                    "project_url": "https://pypi.org/project/dabeplech/",
+                    "project_urls": None,
+                    "release_url": "https://pypi.org/project/dabeplech/0.0.5/",
+                    "requires_dist": [
+                        "pydantic (==1.5.1)",
+                        "requests (==2.23.0)",
+                        "colored (==1.4.2)",
+                    ],
+                    "requires_python": "",
+                    "summary": "Light library to perform request to different bioinformatics APIs",
+                    "version": "0.0.5",
+                    "yanked": False,
+                    "yanked_reason": None,
+                },
+            }
+        ]
+
+        proc = PyPiPackagesProcessor(adapter=adapter_mock)
+        proc.index_packages()
+        package_cnt = Package.objects.count()
+
+        self.assertEqual(package_cnt, 1)
+
