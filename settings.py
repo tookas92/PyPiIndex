@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_elasticsearch_dsl',
+    'packages',
 ]
 
 MIDDLEWARE = [
@@ -76,7 +78,11 @@ DATABASES = {
     }
 }
 
-MIGRATION_MODULES = {}
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'elasticsearch:9200'
+    },
+}
 
 
 # Password validation
