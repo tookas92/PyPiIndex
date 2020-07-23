@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_elasticsearch_dsl",
+    "huey.contrib.djhuey",
     "packages",
 ]
 
@@ -82,6 +83,13 @@ ELASTICSEARCH_DSL = {
     "default": {"hosts": "localhost:9200"},
 }
 
+HUEY = {
+    'name': 'pypipackages',
+    'url': 'redis://localhost:6379/?db=1',
+}
+# for local usage
+HUEY['immediate_use_memory'] = False
+HUEY['immediate'] = False
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
