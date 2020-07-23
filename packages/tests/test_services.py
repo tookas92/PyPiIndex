@@ -7,7 +7,6 @@ from packages.services import PyPiPackagesAdapter
 
 
 class TestPyPiPackagesAdapter(TestCase):
-
     def setUp(self):
         self.transport = Mock()
 
@@ -28,7 +27,7 @@ class TestPyPiPackagesAdapter(TestCase):
                 </channel>
             </rss>
         """
-        expected_output = ['patch-env']
+        expected_output = ["patch-env"]
         self.transport.get.return_value.content = xml
 
         adapter = PyPiPackagesAdapter(transport=self.transport)
@@ -69,11 +68,8 @@ class TestPyPiPackagesAdapter(TestCase):
         self.transport.get.return_value.content = xml
         self.transport.get.return_value.json.return_value = expected_json
 
-
         adapter = PyPiPackagesAdapter(transport=self.transport)
         package_names = adapter.get_packages_names()
         package_jsons = adapter.get_packages_json_list(package_names)
 
         self.assertEqual(package_jsons, expected_output)
-
-

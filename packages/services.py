@@ -5,8 +5,8 @@ from collections import OrderedDict
 
 
 class PyPiPackagesAdapter:
-    PYPI_PACKAGES_URL = 'https://pypi.org/rss/packages.xml'
-    PYPI_JSON_API_URL = 'https://pypi.org/pypi/{}/json'
+    PYPI_PACKAGES_URL = "https://pypi.org/rss/packages.xml"
+    PYPI_JSON_API_URL = "https://pypi.org/pypi/{}/json"
 
     def __init__(self, transport=requests):
         self.transport = transport
@@ -22,16 +22,16 @@ class PyPiPackagesAdapter:
 
     def _get_updated_packages_list(self):
         try:
-            return self._transform_xml_to_dict()['rss']['channel']['item']
+            return self._transform_xml_to_dict()["rss"]["channel"]["item"]
         except KeyError:
             return []
 
     def get_packages_names(self):
         packages = self._get_updated_packages_list()
         if packages and type(packages) == list:
-            return [package.get('link').split('/')[-2] for package in packages]
+            return [package.get("link").split("/")[-2] for package in packages]
         elif packages and type(packages) == OrderedDict:
-            return [packages.get('link').split('/')[-2]]
+            return [packages.get("link").split("/")[-2]]
         else:
             return []
 
