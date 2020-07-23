@@ -43,7 +43,10 @@ class PyPiPackagesAdapter:
         json_list = []
         for name in packages_list:
             resp = self.transport.get(self.PYPI_JSON_API_URL.format(name))
-            json_list.append(resp.json())
+
+            if resp.status_code == 200:
+                json_list.append(resp.json())
+
         return json_list
 
 
