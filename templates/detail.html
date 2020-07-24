@@ -18,7 +18,7 @@
                     {{package.summary}}
         </div>
         <div class="row">
-            <div class="col-md-3 h-100 bg-info">
+            <div class="col-md-3 h-100 bg-secondary">
                 <div class="row">
                     <h3>Package Info</h3>
                 </div>
@@ -28,13 +28,11 @@
                         <li class="list-group-item bg-light"><p class="font-weight-bold">License:{{package.license}}</p></li>
                         <li class="list-group-item bg-light"><p class="font-weight-bold">Requires:</p>{{package.requires_dist}}</li>
                         <li class="list-group-item bg-light"><p class="font-weight-bold">Python:</p>{{package.requires_python}}</li>
-                    </ul>
                     {% if package.maintainer %}
-                    <ul class="list-group w-100 bg-light">
                         <li class="list-group-item bg-light"><p class="font-weight-bold">Maintainer(s):</p> {{package.maintainer}}</li>
                         <li class="list-group-item bg-light"><p class="font-weight-bold">Maintainer(s) email(s):</p> {{package.maintainer_email}}</li>
-                    </ul>
                     {%endif%}
+                    </ul>
                 </div>
                 <div class="row border-right">
                     <h3>Links</h3>
@@ -53,19 +51,21 @@
                         {%endif%}
                     </ul>
                 </div>
+                {% if package.classifiers %}
                 <div class="row border-bottom">
                     <h3>Classifiers</h3>
                 </div>
                 <div class="row">
                     <ul class="list-group w-100 bg-light">
                     {%for item in package.classifiers%}
-                        <li class="list-group-item">{{item}}</li>
+                        <li class="list-group-item bg-light">{{item}}</li>
                     {%endfor%}
                     </ul>
                 </div>
+                {%endif%}
             </div>
             <div class="col-md-9 bg-light">
-                <div class="row border-bottom">
+                <div class="row border-bottom bg-secondary">
                     <h3>Description</h3>
                 </div>
                 <div class="row border-bottom">

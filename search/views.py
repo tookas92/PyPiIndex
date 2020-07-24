@@ -63,7 +63,8 @@ class PackageDocumentDetailView(View):
         document = PackageDocument.get(id=id)
         md = markdown.Markdown()
         document.description = md.convert(document.description)
-        document.classifiers = parse_classifiers(document.classifiers)
+        if document.classifiers:
+            document.classifiers = parse_classifiers(document.classifiers)
 
         ctx = {"package": document}
         return render(request, "detail.html", context=ctx)
