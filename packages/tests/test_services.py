@@ -121,4 +121,3 @@ class TestPyPiPackagesProcessor(TestCase):
         package_cnt = Package.objects.count()
 
         self.assertEqual(package_cnt, 1)
-

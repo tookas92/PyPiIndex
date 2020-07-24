@@ -4,7 +4,91 @@
     <meta charset="utf-8">
     <title>{% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 </head>
 <body>
-{{obj}}
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <form action="" method="get">
+              <div class="input-group">
+                <input class="form-control" name="search" type="text" placeholder="Search...">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-primary" type="submit" value="Submit">Search</button>
+                </div>
+              </div>
+            </form>
+        </div>
+        <div class="row">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Version</th>
+                        <th>Summary</th>
+                    </tr>
+                </thead>
+            {% for item in packages %}
+                <tr>
+                    <td><a href="packages/{{item.id}}">{{item.name}}</a></td>
+                    <td>{{item.version}}</td>
+                    <td>{{item.summary}}</td>
+                </tr>
+            {%endfor%}
+            </table>
+        </div>
+        <div class="row">
+            <nav aria-label="Page navigation example">
+              <ul class="pagination">
+                <li class="page-item"><a class="page-link prev" href="javascript:void(0);">Previous</a></li>
+                {% for page in pages %}
+                  {% if curr_page == page %}
+                    <li class="page-item active"><a id="{{page}}" class="page-link number" href="javascript:void(0);">{{page}}</a></li>
+                  {% else %}
+                    <li class="page-item"><a id="{{page}}" class="page-link number" href="javascript:void(0);"">{{page}}</a></li>
+                  {%endif%}
+                {% endfor %}
+                <li class="page-item"><a class="page-link next" href="javascript:void(0);">Next</a></li>
+              </ul>
+            </nav>
+        </div>
+    </div>
 </body>
+<script>
+    function add_page(id) {
+        let searchText = "page=";
+        let re = new RegExp("\\b"+searchText+"\\b",'i');
+        console.log(re.test(window.location.search));
+        if (window.location.search && !re.test(window.location.search)) {
+            window.location.search = window.location.search + `&page=${id}`;
+        } else if (window.location.search && re.test(window.location.search)) {
+            let params = window.location.search.split('&')
+            window.location.search = params[0] + `&page=${id}`;
+        } else {
+            window.location.search = `?page=${id}`;
+        }
+    }
+    $('.number').on('click', function() {
+        let id = $(this).attr('id');
+        add_page(id);
+    });
+    $('.prev').on('click', function() {
+        let curr_page = parseInt("{{curr_page}}");
+        if (curr_page != 1) {
+            let prev = curr_page - 1;
+            add_page(prev);
+        }
+
+    })
+    $('.next').on('click', function() {
+        let total_pages = parseInt("{{total_pages}}");
+        let curr_page = parseInt("{{curr_page}}");
+        if (curr_page != total_pages - 1) {
+            let prev = curr_page + 1;
+            add_page(prev);
+        }
+
+    })
+</script>

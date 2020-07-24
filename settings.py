@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "django.contrib.sessions",
-    'django.contrib.auth',
+    "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.messages",
     "django.contrib.staticfiles",
@@ -56,7 +56,7 @@ ROOT_URLCONF = "urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(PROJECT_PATH, 'templates')],
+        "DIRS": [os.path.join(PROJECT_PATH, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -69,9 +69,7 @@ TEMPLATES = [
     },
 ]
 
-TEMPLATE_DIRS = (
-    os.path.join(PROJECT_PATH, 'templates'),
-)
+TEMPLATE_DIRS = (os.path.join(PROJECT_PATH, "templates"),)
 
 WSGI_APPLICATION = "wsgi.application"
 
@@ -90,13 +88,15 @@ ELASTICSEARCH_DSL = {
     "default": {"hosts": "localhost:9200"},
 }
 
+ELASTICSEARCH_PAGINATE_BY = 10
+
 HUEY = {
-    'name': 'pypipackages',
-    'url': 'redis://localhost:6379/?db=1',
+    "name": "pypipackages",
+    "url": "redis://localhost:6379/?db=1",
 }
 # for local usage
-HUEY['immediate_use_memory'] = False
-HUEY['immediate'] = False
+HUEY["immediate_use_memory"] = False
+HUEY["immediate"] = False
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -134,11 +134,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/media/static/'
-STATIC_ROOT = ''
-STATICFILES_DIRS = (
-    os.path.join(PROJECT_PATH, "media", "static"),
-)
+STATIC_URL = "/media/static/"
+STATIC_ROOT = ""
+STATICFILES_DIRS = (os.path.join(PROJECT_PATH, "media", "static"),)
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media')
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(PROJECT_PATH, "media")
