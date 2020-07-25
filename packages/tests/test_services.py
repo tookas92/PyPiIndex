@@ -10,6 +10,7 @@ from packages.models import Package
 class TestPyPiPackagesAdapter(TestCase):
     def setUp(self):
         self.transport = Mock()
+        self.transport.get.return_value.status_code = 200
 
     def test_get_packages(self):
         xml = """
