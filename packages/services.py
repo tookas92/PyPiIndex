@@ -3,6 +3,7 @@ import xmltodict
 import json
 
 from collections import OrderedDict
+from typing import List
 
 
 from packages.models import Package
@@ -15,22 +16,22 @@ class PyPiPackagesAdapter:
     def __init__(self, transport=requests):
         self.transport = transport
 
-    def _get_packages_xml(self):
+    def _get_packages_xml(self) -> str:
         response = self.transport.get(self.PYPI_PACKAGES_URL)
         return response.content
 
-    def _transform_xml_to_dict(self):
+    def _transform_xml_to_dict(self) -> dict:
         packages_xml = self._get_packages_xml()
         packages_dict = xmltodict.parse(packages_xml)
         return packages_dict
 
-    def _get_updated_packages_list(self):
+    def _get_updated_packages_list(self) -> List[dict]:
         try:
             return self._transform_xml_to_dict()["rss"]["channel"]["item"]
         except KeyError:
             return []
 
-    def get_packages_names(self):
+    def get_packages_names(self) -> List[str]:
         packages = self._get_updated_packages_list()
         if packages and type(packages) == list:
             return [package.get("link").split("/")[-2] for package in packages]
@@ -39,7 +40,7 @@ class PyPiPackagesAdapter:
         else:
             return []
 
-    def get_packages_json_list(self, packages_list):
+    def get_packages_json_list(self, packages_list: List[str]) -> List[dict]:
         json_list = []
         for name in packages_list:
             resp = self.transport.get(self.PYPI_JSON_API_URL.format(name))
@@ -54,7 +55,7 @@ class PyPiPackagesProcessor:
     def __init__(self, adapter=PyPiPackagesAdapter()):
         self.adapter = adapter
 
-    def _prepare_json_list(self):
+    def _prepare_json_list(self) -> List[dict]:
         names = self.adapter.get_packages_names()
         return self.adapter.get_packages_json_list(names)
 

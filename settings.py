@@ -92,11 +92,11 @@ ELASTICSEARCH_PAGINATE_BY = 10
 
 HUEY = {
     "name": "pypipackages",
-    "url": "redis://localhost:6379/?db=1",
+    "url": "redis://localhost:6379/?db=15",
 }
 # for local usage
-HUEY["immediate_use_memory"] = False
-HUEY["immediate"] = False
+if DEBUG:
+    HUEY["immediate"] = False
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

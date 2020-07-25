@@ -1,14 +1,16 @@
 import math
-import json
-import markdown
 
-from django.http import HttpResponse
+from urllib3.exceptions import ConnectionError
+
 from django.conf import settings
+from django.http import Http404
 from django.views import View
 from django.shortcuts import render
 from elasticsearch_dsl import Q
+from elasticsearch.exceptions import NotFoundError
 
 from packages.documents import PackageDocument
+from packages.utils import parse_package_document
 
 # Create your views here.
 
@@ -36,35 +38,36 @@ class SearchView(View):
                 ],
             )
             search = search.query(query)
+        try:
+            total = search.count()
+            total_pages = math.ceil(total / settings.ELASTICSEARCH_PAGINATE_BY) + 1
+            offset = (curr_page - 1) * settings.ELASTICSEARCH_PAGINATE_BY
+            limit = offset + settings.ELASTICSEARCH_PAGINATE_BY
+            search = search[offset:limit]
+            results = search.execute()
 
-        total = search.count()
-        total_pages = math.ceil(total / settings.ELASTICSEARCH_PAGINATE_BY) + 1
-        offset = (curr_page - 1) * settings.ELASTICSEARCH_PAGINATE_BY
-        limit = offset + settings.ELASTICSEARCH_PAGINATE_BY
-        search = search[offset:limit]
-        results = search.execute()
+            ctx = {
+                "packages": results,
+                "pages": range(1, total_pages),
+                "curr_page": curr_page,
+                "total_pages": total_pages,
+                "total_cnt": total
+            }
+        except ConnectionError as e:
+            print(e)
+            ctx = {"error": "Something went wrong. Contact with administrator."}
 
-        ctx = {
-            "packages": results,
-            "pages": range(1, total_pages),
-            "curr_page": curr_page,
-            "total_pages": total_pages,
-            "total_cnt": total
-        }
         return render(request, "index.html", context=ctx)
-
-def parse_classifiers(classifiers):
-    return classifiers.split(',')
 
 
 class PackageDocumentDetailView(View):
 
     def get(self, request, id):
-        document = PackageDocument.get(id=id)
-        md = markdown.Markdown()
-        document.description = md.convert(document.description)
-        if document.classifiers:
-            document.classifiers = parse_classifiers(document.classifiers)
+        try:
+            document = PackageDocument.get(id=id)
+            document = parse_package_document(document)
+            ctx = {"package": document}
+        except NotFoundError as e:
+            raise Http404("Package does not exist")
 
-        ctx = {"package": document}
         return render(request, "detail.html", context=ctx)

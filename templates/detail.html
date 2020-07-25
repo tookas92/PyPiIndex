@@ -10,6 +10,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 </head>
 <body>
+    {% if not error %}
     <div class="container col-md-12 bg-secondary">
         <div class="row justify-content-md-center bg-info">
             <h2>{{package.name}}  {{package.version}}</h2>
@@ -17,8 +18,8 @@
         <div class="row justify-content-md-center bg-info">
                     {{package.summary}}
         </div>
-        <div class="row">
-            <div class="col-md-3 h-100 bg-secondary">
+        <div class="row package">
+            <div class="col-md-3 bg-secondary">
                 <div class="row">
                     <h3>Package Info</h3>
                 </div>
@@ -63,8 +64,18 @@
                     </ul>
                 </div>
                 {%endif%}
+                <div class="row border-bottom">
+                    <h3>Downloads</h3>
+                </div>
+                <div class="row">
+                    <ul class="list-group w-100 bg-light">
+                        {% for item in package.downloads %}
+                        <li class="list-group-item bg-light">{{item}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-            <div class="col-md-9 bg-light">
+            <div class="col-md-9 bg-light desc-col">
                 <div class="row border-bottom bg-secondary">
                     <h3>Description</h3>
                 </div>
@@ -76,6 +87,11 @@
             </div>
         </div>
     </div>
+    {% else %}
+    <div class="alert alert-danger p-3" role="alert">
+        {{error}}
+    </div>
+    {% endif %}
 
 </body>
 </html>
