@@ -1,0 +1,13 @@
+black==19.10b0
+Django==3.0.8
+django-elasticsearch-dsl==7.1.4
+django-elasticsearch-dsl-drf==0.20.8
+djangorestframework==3.11.0
+elasticsearch==7.8.0
+elasticsearch-dsl==7.2.1
+huey==2.2.0
+Markdown==3.2.2
+pytest==5.4.3
+redis==3.5.3
+requests==2.24.0
+xmltodict==0.12.0
