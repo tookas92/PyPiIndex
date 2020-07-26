@@ -9,6 +9,13 @@ from typing import List
 from packages.models import Package
 
 
+class APIChangedError(Exception):
+
+    def __init__(self, message="PyPI API Response format probably changed"):
+        self.message = message
+        super().__init__(self.message)
+
+
 class PyPiPackagesAdapter:
     PYPI_PACKAGES_URL = "https://pypi.org/rss/packages.xml"
     PYPI_JSON_API_URL = "https://pypi.org/pypi/{}/json"
@@ -64,41 +71,43 @@ class PyPiPackagesProcessor:
         json_list = self._prepare_json_list()
         for data_obj in json_list:
             data = data_obj.get("info")
-
-            Package.objects.update_or_create(
-                author=data["author"],
-                author_email=data["author_email"],
-                name=data["name"],
-                defaults=dict(
-                    bugtrack_url=data["bugtrack_url"],
-                    classifiers=",".join(data["classifiers"])
-                    if data.get("classifiers")
-                    else "",
-                    description=data["description"],
-                    description_content_type=data["description_content_type"],
-                    docs_url=data["docs_url"],
-                    download_url=data["download_url"],
-                    downloads=json.dumps(data["downloads"]),
-                    home_page=data["home_page"],
-                    keywords=data["keywords"],
-                    license=data["license"],
-                    maintainer=data["maintainer"],
-                    maintainer_email=data["maintainer_email"],
-                    package_url=data["package_url"],
-                    platform=data["platform"],
-                    project_url=data["project_url"],
-                    project_urls=json.dumps(data["project_urls"]),
-                    release_url=data["release_url"],
-                    requires_dist=",".join(data["requires_dist"])
-                    if data.get("requires_dist")
-                    else "",
-                    requires_python=data["requires_python"],
-                    summary=data["summary"],
-                    version=data["version"],
-                    yanked=data["yanked"],
-                    yanked_reason=data["yanked_reason"],
-                    releases=json.dumps(data_obj["releases"])
-                    if data_obj.get("releases")
-                    else "",
-                ),
-            )
+            try:
+                Package.objects.update_or_create(
+                    author=data["author"],
+                    author_email=data["author_email"],
+                    name=data["name"],
+                    defaults=dict(
+                        bugtrack_url=data["bugtrack_url"],
+                        classifiers=",".join(data["classifiers"])
+                        if data.get("classifiers")
+                        else "",
+                        description=data["description"],
+                        description_content_type=data["description_content_type"],
+                        docs_url=data["docs_url"],
+                        download_url=data["download_url"],
+                        downloads=json.dumps(data["downloads"]),
+                        home_page=data["home_page"],
+                        keywords=data["keywords"],
+                        license=data["license"],
+                        maintainer=data["maintainer"],
+                        maintainer_email=data["maintainer_email"],
+                        package_url=data["package_url"],
+                        platform=data["platform"],
+                        project_url=data["project_url"],
+                        project_urls=json.dumps(data["project_urls"]),
+                        release_url=data["release_url"],
+                        requires_dist=",".join(data["requires_dist"])
+                        if data.get("requires_dist")
+                        else "",
+                        requires_python=data["requires_python"],
+                        summary=data["summary"],
+                        version=data["version"],
+                        yanked=data["yanked"],
+                        yanked_reason=data["yanked_reason"],
+                        releases=json.dumps(data_obj["releases"])
+                        if data_obj.get("releases")
+                        else "",
+                    ),
+                )
+            except KeyError as e:
+                raise APIChangedError(message=f"PyPi API Response format probably changed: {e}")

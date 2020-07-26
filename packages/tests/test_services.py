@@ -1,10 +1,11 @@
-from collections import OrderedDict
+
 
 from django.test import TestCase
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
-from packages.services import PyPiPackagesAdapter, PyPiPackagesProcessor
+from packages.services import PyPiPackagesAdapter, PyPiPackagesProcessor, APIChangedError
 from packages.models import Package
+from packages.documents import PackageDocument
 
 
 class TestPyPiPackagesAdapter(TestCase):
@@ -78,12 +79,12 @@ class TestPyPiPackagesAdapter(TestCase):
 
 
 class TestPyPiPackagesProcessor(TestCase):
-    def test_index_packages(self):
-        adapter_mock = Mock()
-        adapter_mock.get_packages_json_list.return_value = [
+
+    def setUp(self):
+        self.return_val = [
             {
                 "info": {
-                    "author": "Kenzo-Hugo Hillion",
+                    "author": "Test Test",
                     "author_email": "kehillio@pasteur.fr",
                     "bugtrack_url": None,
                     "classifiers": [],
@@ -117,8 +118,24 @@ class TestPyPiPackagesProcessor(TestCase):
             }
         ]
 
+    def test_index_packages(self):
+        adapter_mock = Mock()
+        adapter_mock.get_packages_json_list.return_value = self.return_val
+
         proc = PyPiPackagesProcessor(adapter=adapter_mock)
         proc.index_packages()
         package_cnt = Package.objects.count()
-
+        # document_cnt = PackageDocument.search().query('match', author="Test Test").count()
+        #
+        # self.assertEqual(document_cnt, 1)
         self.assertEqual(package_cnt, 1)
+
+    def test_index_packages_api_changed(self):
+        adapter_mock = Mock()
+        self.return_val[0]['info'].pop('license')
+        adapter_mock.get_packages_json_list.return_value = self.return_val
+
+        proc = PyPiPackagesProcessor(adapter=adapter_mock)
+
+        with self.assertRaises(APIChangedError):
+            proc.index_packages()
