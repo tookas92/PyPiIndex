@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     "huey.contrib.djhuey",
     "packages",
     "search",
-    "api,"
+    "api",
 ]
 
 MIDDLEWARE = [

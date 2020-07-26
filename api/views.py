@@ -1,3 +1,29 @@
-from django.shortcuts import render
+from django_elasticsearch_dsl_drf.filter_backends import (
+    SearchFilterBackend,
+)
+from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
+from django_elasticsearch_dsl_drf.pagination import LimitOffsetPagination
 
-# Create your views here.
+from packages.documents import PackageDocument
+from api.serializers import PackageDocumentSerializer
+
+
+class PackageViewSet(DocumentViewSet):
+    document = PackageDocument
+    serializer_class = PackageDocumentSerializer
+    pagination_class = LimitOffsetPagination
+
+    filter_backends = [
+        SearchFilterBackend,
+    ]
+
+    search_fields = (
+        "name",
+        "author",
+        "author_email",
+        "description",
+        "keywords",
+        "version",
+        "maintainer",
+        "maintainer_email",
+    )
