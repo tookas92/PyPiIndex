@@ -91,7 +91,7 @@ ELASTICSEARCH_DSL = {
     "default": {"hosts": "localhost:9200"},
 }
 
-ELASTICSEARCH_PAGINATE_BY = 10
+ELASTICSEARCH_PAGINATE_BY = 25
 
 HUEY = {
     "name": "pypipackages",

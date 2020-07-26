@@ -40,7 +40,7 @@ class SearchView(View):
             search = search.query(query)
         try:
             total = search.count()
-            total_pages = math.ceil(total / settings.ELASTICSEARCH_PAGINATE_BY) + 1
+            total_pages = math.ceil(total / settings.ELASTICSEARCH_PAGINATE_BY)
             offset = (curr_page - 1) * settings.ELASTICSEARCH_PAGINATE_BY
             limit = offset + settings.ELASTICSEARCH_PAGINATE_BY
             search = search[offset:limit]
