@@ -12,8 +12,13 @@
 <body>
     {% if not error %}
     <div class="container col-md-12 bg-secondary">
-        <div class="row justify-content-md-center bg-info">
-            <h2>{{package.name}}  {{package.version}}</h2>
+        <div class="row bg-info">
+            <div class="col-md-1">
+                <input class="btn btn-danger" type=button value="Back to list" onClick="javascript:history.go(-1);">
+            </div>
+            <div class="col-md-11">
+                <h2 style="text-align:center;">{{package.name}}  {{package.version}}</h2>
+            </div>
         </div>
         <div class="row justify-content-md-center bg-info">
                     {{package.summary}}
