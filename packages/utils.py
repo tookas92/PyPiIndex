@@ -1,11 +1,11 @@
 import json
+
 import markdown
 
 from packages.documents import PackageDocument
 
 
 class PackageDocumentParser:
-
     def __call__(self, document: PackageDocument) -> PackageDocument:
         self.document = document
         self._parse_downloads()
@@ -17,16 +17,19 @@ class PackageDocumentParser:
 
     def _parse_classifiers(self):
         if self.document.classifiers:
-            self.document.classifiers = self.document.classifiers.split(',')
+            self.document.classifiers = self.document.classifiers.split(",")
 
     def _parse_downloads(self):
         downloads = json.loads(self.document.downloads)
         downloads_mapping = {
-            'last_day': 'Last day',
-            'last_week': 'Last week',
-            'last_month': 'Last month'
+            "last_day": "Last day",
+            "last_week": "Last week",
+            "last_month": "Last month",
         }
-        self.document.downloads = [f"{downloads_mapping[k]}: {v if v != -1 else 0}" for k, v in downloads.items()]
+        self.document.downloads = [
+            f"{downloads_mapping[k]}: {v if v != -1 else 0}"
+            for k, v in downloads.items()
+        ]
 
     def _parse_description(self):
         # TODO parsowanie wg content_type description (są opisy w markdown bez ct, zdarzają się inne formatowania, ale raczej nie w nowych paczkach)

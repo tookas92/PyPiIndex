@@ -1,11 +1,12 @@
-
+from unittest.mock import Mock
 
 from django.test import TestCase
-from unittest.mock import Mock
 from requests.exceptions import RequestException
-from packages.services import PyPiPackagesAdapter, PyPiPackagesProcessor, APIChangedError
-from packages.models import Package
+
 from packages.documents import PackageDocument
+from packages.models import Package
+from packages.services import (APIChangedError, PyPiPackagesAdapter,
+                               PyPiPackagesProcessor)
 
 
 class TestPyPiPackagesAdapter(TestCase):
@@ -82,7 +83,6 @@ class TestPyPiPackagesAdapter(TestCase):
 
 
 class TestPyPiPackagesProcessor(TestCase):
-
     def setUp(self):
         self.return_val = [
             {
@@ -135,7 +135,7 @@ class TestPyPiPackagesProcessor(TestCase):
 
     def test_index_packages_api_changed(self):
         adapter_mock = Mock()
-        self.return_val[0]['info'].pop('license')
+        self.return_val[0]["info"].pop("license")
         adapter_mock.get_packages_json_list.return_value = self.return_val
 
         proc = PyPiPackagesProcessor(adapter=adapter_mock)

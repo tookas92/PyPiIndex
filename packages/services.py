@@ -1,17 +1,15 @@
-import requests
-import xmltodict
 import json
-
 from collections import OrderedDict
 from typing import List
-from requests.exceptions import RequestException
 
+import requests
+import xmltodict
+from requests.exceptions import RequestException
 
 from packages.models import Package
 
 
 class APIChangedError(Exception):
-
     def __init__(self, message="PyPI API Response format probably changed"):
         self.message = message
         super().__init__(self.message)
@@ -28,14 +26,16 @@ class PyPiPackagesAdapter:
 
     def _get_packages_xml(self) -> str:
         try:
-            response = self.transport.get(self.PYPI_PACKAGES_URL, timeout=self.__timeout)
+            response = self.transport.get(
+                self.PYPI_PACKAGES_URL, timeout=self.__timeout
+            )
             if response.status_code == 200:
                 return response.content
-            return ''
+            return ""
         except self.exception_cls as error:
-            print(f'request error: {error}')
+            print(f"request error: {error}")
             # log(error)
-            return ''
+            return ""
 
     def _transform_xml_to_dict(self) -> dict:
         packages_xml = self._get_packages_xml()
@@ -61,7 +61,9 @@ class PyPiPackagesAdapter:
         json_list = []
         for name in packages_list:
             try:
-                resp = self.transport.get(self.PYPI_JSON_API_URL.format(name), timeout=self.__timeout)
+                resp = self.transport.get(
+                    self.PYPI_JSON_API_URL.format(name), timeout=self.__timeout
+                )
                 if resp.status_code == 200:
                     json_list.append(resp.json())
             except self.exception_cls as error:
@@ -123,4 +125,6 @@ class PyPiPackagesProcessor:
                     ),
                 )
             except KeyError as e:
-                raise APIChangedError(message=f"PyPi API Response format probably changed: {e}")
+                raise APIChangedError(
+                    message=f"PyPi API Response format probably changed: {e}"
+                )

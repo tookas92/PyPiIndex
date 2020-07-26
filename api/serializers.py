@@ -4,7 +4,6 @@ from packages.documents import PackageDocument
 
 
 class PackageDocumentSerializer(DocumentSerializer):
-
     class Meta:
         document = PackageDocument
         fields = [

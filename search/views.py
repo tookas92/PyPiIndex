@@ -1,13 +1,12 @@
 import math
 
-from urllib3.exceptions import ConnectionError
-
 from django.conf import settings
 from django.http import Http404
-from django.views import View
 from django.shortcuts import render
-from elasticsearch_dsl import Q
+from django.views import View
 from elasticsearch.exceptions import NotFoundError
+from elasticsearch_dsl import Q
+from urllib3.exceptions import ConnectionError
 
 from packages.documents import PackageDocument
 from packages.utils import parse_package_document
@@ -51,7 +50,7 @@ class SearchView(View):
                 "pages": range(1, total_pages),
                 "curr_page": curr_page,
                 "total_pages": total_pages,
-                "total_cnt": total
+                "total_cnt": total,
             }
         except ConnectionError as e:
             print(e)
@@ -61,7 +60,6 @@ class SearchView(View):
 
 
 class PackageDocumentDetailView(View):
-
     def get(self, request, id):
         try:
             document = PackageDocument.get(id=id)
