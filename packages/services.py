@@ -7,13 +7,7 @@ import xmltodict
 from requests.exceptions import RequestException
 
 from packages.models import Package
-
-
-class APIChangedError(Exception):
-    def __init__(self, message="PyPI API Response format probably changed"):
-        self.message = message
-        super().__init__(self.message)
-
+from packages.exceptions import APIChangedError
 
 class PyPiPackagesAdapter:
     PYPI_PACKAGES_URL = "https://pypi.org/rss/packages.xml"
