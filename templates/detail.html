@@ -74,6 +74,18 @@
                         {% endfor %}
                     </ul>
                 </div>
+                {% if package.releases %}
+                <div class="row border-bottom">
+                    <h3>Releases</h3>
+                </div>
+                <div class="row">
+                    <ul class="list-group w-100 bg-light">
+                        {% for version, url in package.releases.to_dict.items %}
+                        <li class="list-group-item bg-light"><a href="{{url}}">Version {{version}}</a> </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
             </div>
             <div class="col-md-9 bg-light desc-col">
                 <div class="row border-bottom bg-secondary">
