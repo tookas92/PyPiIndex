@@ -97,8 +97,8 @@ class PyPiPackagesProcessor:
                     version=data["version"],
                     yanked=data["yanked"],
                     yanked_reason=data["yanked_reason"],
-                    releases=json.dumps(data["releases"])
-                    if data.get("releases")
+                    releases=json.dumps(data_obj["releases"])
+                    if data_obj.get("releases")
                     else "",
                 ),
             )
