@@ -36,10 +36,13 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
     "django_elasticsearch_dsl",
+    "django_elasticsearch_dsl_drf",
     "huey.contrib.djhuey",
     "packages",
     "search",
+    "api,"
 ]
 
 MIDDLEWARE = [
