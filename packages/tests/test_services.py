@@ -2,7 +2,7 @@
 
 from django.test import TestCase
 from unittest.mock import Mock
-
+from requests.exceptions import RequestException
 from packages.services import PyPiPackagesAdapter, PyPiPackagesProcessor, APIChangedError
 from packages.models import Package
 from packages.documents import PackageDocument
@@ -12,9 +12,7 @@ class TestPyPiPackagesAdapter(TestCase):
     def setUp(self):
         self.transport = Mock()
         self.transport.get.return_value.status_code = 200
-
-    def test_get_packages(self):
-        xml = """
+        self.xml = """
             <rss version="2.0">
                 <channel>
                     <item>
@@ -30,8 +28,19 @@ class TestPyPiPackagesAdapter(TestCase):
                 </channel>
             </rss>
         """
+
+    def test_get_packages(self):
+
         expected_output = ["patch-env"]
-        self.transport.get.return_value.content = xml
+        self.transport.get.return_value.content = self.xml
+
+        adapter = PyPiPackagesAdapter(transport=self.transport)
+        package = adapter.get_packages_names()
+        self.assertEqual(package, expected_output)
+
+    def test_get_packages_names_request_error_returns_empty_list(self):
+        expected_output = []
+        self.transport.get.side_effect = RequestException
 
         adapter = PyPiPackagesAdapter(transport=self.transport)
         package = adapter.get_packages_names()
@@ -50,26 +59,20 @@ class TestPyPiPackagesAdapter(TestCase):
         self.assertEqual(package, [])
 
     def test_get_packages_json_list(self):
-        xml = """
-                    <rss version="2.0">
-                        <channel>
-                            <item>
-                                <title>patch-env added to PyPI</title>
-                                <link>https://pypi.org/project/patch-env/</link>
-                                <guid>https://pypi.org/project/patch-env/</guid>
-                                <description>
-                                Patch os.environ with dynamic values when the interpreter starts
-                                </description>
-                                <author>info@caricalabs.com</author>
-                                <pubDate>Wed, 22 Jul 2020 19:09:42 GMT</pubDate>
-                            </item>
-                        </channel>
-                    </rss>
-                """
         expected_json = '{"test": "json"}'
         expected_output = [expected_json]
-        self.transport.get.return_value.content = xml
+        self.transport.get.return_value.content = self.xml
         self.transport.get.return_value.json.return_value = expected_json
+
+        adapter = PyPiPackagesAdapter(transport=self.transport)
+        package_names = adapter.get_packages_names()
+        package_jsons = adapter.get_packages_json_list(package_names)
+
+        self.assertEqual(package_jsons, expected_output)
+
+    def test_get_packages_json_list_request_error(self):
+        expected_output = []
+        self.transport.get.side_effect = RequestException
 
         adapter = PyPiPackagesAdapter(transport=self.transport)
         package_names = adapter.get_packages_names()
