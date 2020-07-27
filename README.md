@@ -1,5 +1,5 @@
 # PyPiIndex
-PyPiIndex is application that fetches newest PyPi packages based on https://pypi.org/rss/packages.xml once a day and indexes them on elasticsearch engine. You can search indexed packages by html search or using REST API for example:
+PyPiIndex is application that fetches newest PyPi packages based on https://pypi.org/rss/packages.xml once a day and indexes them on elasticsearch engine(using huey task queue). You can search indexed packages by html search or using REST API for example:
 HTML: [http://localhost:8000/?search=python](http://localhost:8000/?search=python)
 API: [http://localhost:8000/api/packages/?search=python&offset=0&limit=100](http://localhost:8000/api/packages/?search=python&offset=0&limit=100)
 
