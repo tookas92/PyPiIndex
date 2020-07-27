@@ -14,8 +14,8 @@ python manage.py run_huey
 
 ## Settings
 
-You can set how many records per page can be displayed on html search by changing `ELASTICSEARCH_PAGINATE_BY` constant in `settings.py` file for example:
-`ELASTICSEARCH_PAGINATE_BY=25`
+You can set how many records per page can be displayed on html search by changing `ELASTICSEARCH_PAGINATE_BY` environment variable before running app, for example:
+`export ELASTICSEARCH_PAGINATE_BY=15` in terminal. If you don't set this variable the default value will be 25.
 
 ## Restore es index
 In case if you lose data from elasticsearch, app backups everything in sqlite database, to rebuild elasticsearch index all you need to do is run following command:

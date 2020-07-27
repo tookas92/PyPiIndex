@@ -18,6 +18,7 @@ class SearchView(View):
     def get(self, request):
         curr_page = int(request.GET.get("page", 1))
         search_param = request.GET.get("search")
+        paginate_by = settings.ELASTICSEARCH_PAGINATE_BY
 
         search = PackageDocument.search()
 
@@ -39,9 +40,9 @@ class SearchView(View):
             search = search.query(query)
         try:
             total = search.count()
-            total_pages = math.ceil(total / settings.ELASTICSEARCH_PAGINATE_BY)
-            offset = (curr_page - 1) * settings.ELASTICSEARCH_PAGINATE_BY
-            limit = offset + settings.ELASTICSEARCH_PAGINATE_BY
+            total_pages = math.ceil(total / paginate_by)
+            offset = (curr_page - 1) * paginate_by
+            limit = offset + paginate_by
             search = search[offset:limit]
             results = search.execute()
 
