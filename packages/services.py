@@ -9,6 +9,7 @@ from requests.exceptions import RequestException
 from packages.models import Package
 from packages.exceptions import APIChangedError
 
+
 class PyPiPackagesAdapter:
     PYPI_PACKAGES_URL = "https://pypi.org/rss/packages.xml"
     PYPI_JSON_API_URL = "https://pypi.org/pypi/{}/json"

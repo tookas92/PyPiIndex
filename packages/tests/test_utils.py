@@ -3,7 +3,6 @@ from elasticsearch_dsl.utils import AttrList
 
 from packages.documents import PackageDocument
 from packages.utils import parse_package_document
-from packages.exceptions import APIChangedError
 
 
 class TestParsePackageDocument(TestCase):
