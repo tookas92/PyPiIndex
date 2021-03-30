@@ -1,5 +1,5 @@
 black==19.10b0
-Django==3.0.8
+Django==3.0.12
 django-elasticsearch-dsl==7.1.4
 django-elasticsearch-dsl-drf==0.20.8
 djangorestframework==3.11.0
